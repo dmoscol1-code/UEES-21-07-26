@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.Collections;   
+using System.Collections;
+using UnityEngine.UI;  
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,17 +11,20 @@ public class PlayerController : MonoBehaviour
     public Sprite[] mySprites;
     private int index = 0;
 
+    public AudioClip jumpSound;      // Arrastra el clip de audio desde el Inspector
+    private AudioSource myAudioSource;
+
     private Rigidbody2D myrigidbody2d;
     private SpriteRenderer mySpriteRenderer;
-    // private GameObject Bullet;
-    // private GameManager myGameManager;
+    public GameObject Bullet;
+    private GameManager myGameManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
        myrigidbody2d = GetComponent<Rigidbody2D>();
        mySpriteRenderer = GetComponent<SpriteRenderer>(); // Para cambiar el sprite del jugador.
        StartCoroutine(WalkCoRutine());
-       // myGameManager = GameObject.FindObjectOfType<GameManager>(); 
+       myGameManager = GameObject.FindObjectOfType<GameManager>(); 
     }
 
     // Update is called once per frame
@@ -36,11 +40,38 @@ public class PlayerController : MonoBehaviour
         {
             myrigidbody2d.linearVelocity =
                 new Vector2(playerSpeed, playerJumpForce);
+            
+            if (myAudioSource != null && jumpSound != null)
+            {
+                myAudioSource.PlayOneShot(jumpSound);
+            }
         }
         if (Input.GetKeyDown(KeyCode.E)) 
         {
-            // Instantiate(Bullet, transform.position, Quaternion.identity);
+            Instantiate(Bullet, transform.position, Quaternion.identity);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("ItemGood"))
+        {
+            Destroy(collision.gameObject);
+            myGameManager.AddScore();
+        }
+        else if (collision.CompareTag("ItemBad"))
+        {
+            Destroy(collision.gameObject);
+            PlayerDeath();
+        }
+        else if (collision.CompareTag("DeathZone"))
+        {
+            PlayerDeath();
+        }
+    }
+    void PlayerDeath()
+    {
+        SceneManager.LoadScene("GameScene");
     }
     IEnumerator WalkCoRutine()
     {
