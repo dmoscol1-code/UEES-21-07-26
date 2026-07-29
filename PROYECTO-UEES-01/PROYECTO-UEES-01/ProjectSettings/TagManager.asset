@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Platform
+  - ItemBad
+  - ItemGood
+  - DeathZone
+  - ScoreText
+  - JumpSound
   layers:
   - Default
   - TransparentFX
@@ -41,6 +46,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BackgroundLayer
+    uniqueID: 3810083539
+    locked: 0
+  - name: DefaultLayer
+    uniqueID: 3367396035
     locked: 0
   m_RenderingLayers:
   - Default
